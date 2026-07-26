@@ -1,48 +1,60 @@
- import mongoose from "mongoose";
- const userSchema = new mongoose.Schema({
-    name:{
-        type: String,
-        required: true,
+import mongoose from "mongoose";
+
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
     },
-    email:{
-        type: String,
-        required: true,
-        unique: true,
+    email: {
+      type: String,
+      required: true,
+      unique: true,
     },
-    password:{
-        type: String,
-        required: true,
-        unique: true,
-    }, 
-    gender:{
-        type: String,
-        required: true,
-        enum: ["male", "female"],
+    password: {
+      type: String,
+      required: true,
     },
-    followers:[
-        {
+    gender: {
+      type: String,
+      required: true,
+      enum: ["male", "female"],
+    },
+    followers: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref:"User",
-        }
-    ],
-    followings:[
-        {
-        type: mongoose.Schema.Types.ObjectId,
-        ref:"User",  //a User can reference other Users → this is self-referencing.
-        }
-    ],
-    profilePic:{ //both id and url are send by cloudinary
-        id:String, //we can updatate the image in cloudinary using this id
-        url:String,
+        ref: "User",
       },
-       emailDomain : {
-        type :  String,
-        required : true,
-       }
+    ],
+    followings: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    profilePic: {
+      id: {
+        type: String,
+        default: "",
+      },
+      url: {
+        type: String,
+        default: "",
+      },
     },
-    {
-        timestamps:true,
-    }
+    emailDomain: {
+      type: String,
+      required: true,
+    },
+    theme: {
+      type: String,
+      enum: ["light", "dark"],
+      default: "dark",
+    },
+  },
+  {
+    timestamps: true,
+  }
 );
 
 export const User = mongoose.model("User", userSchema);

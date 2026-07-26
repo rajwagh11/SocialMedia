@@ -4,12 +4,10 @@ import getDataUrl from "../utils/urlGenrator.js";
 import cloudinary from "cloudinary";
 import bcrypt from "bcrypt";
 
-
 export const myProfile = TryCatch(async (req, res) => {
   const user = await User.findById(req.user._id).select("-password");
   res.json(user);
 });
-
 
 export const userProfile = TryCatch(async (req, res) => {
   const loggedInUser = await User.findById(req.user._id);
@@ -21,14 +19,12 @@ export const userProfile = TryCatch(async (req, res) => {
     });
   }
 
-
   if (loggedInUser.emailDomain !== user.emailDomain) {
     return res.status(403).json({ message: "Access denied - different domain" });
   }
 
   res.json(user);
 });
-
 
 export const followandUnfollowUser = TryCatch(async (req, res) => {
   const user = await User.findById(req.params.id);
@@ -88,16 +84,24 @@ export const userfollowerandFollowingData = TryCatch(async (req, res) => {
 
 export const updateProfile = TryCatch(async (req, res) => {
   const user = await User.findById(req.user._id);
-  const { name } = req.body;
+  const { name, theme } = req.body;
 
   if (name) {
     user.name = name;
   }
 
+  // Allow updating eye-soothing theme alongside profile details if passed
+  if (theme && ["light", "dark"].includes(theme)) {
+    user.theme = theme;
+  }
+
   const file = req.file;
   if (file) {
     const fileUrl = getDataUrl(file);
-    await cloudinary.v2.uploader.destroy(user.profilePic.id);
+    // Safe check: Only destroy if an existing Cloudinary ID is present
+    if (user.profilePic && user.profilePic.id) {
+      await cloudinary.v2.uploader.destroy(user.profilePic.id);
+    }
     const myCloud = await cloudinary.v2.uploader.upload(fileUrl.content);
 
     user.profilePic.id = myCloud.public_id;
@@ -108,6 +112,7 @@ export const updateProfile = TryCatch(async (req, res) => {
 
   res.json({
     message: "Profile updated successfully",
+    user,
   });
 });
 
@@ -151,5 +156,26 @@ export const getAllUsers = TryCatch(async (req, res) => {
   res.status(200).json({
     success: true,
     users: sameDomainUsers,
+  });
+});
+
+// NEW: Dedicated lightweight controller to save eye-soothing UI theme preferences
+export const updateTheme = TryCatch(async (req, res) => {
+  const { theme } = req.body;
+
+  if (!["light", "dark"].includes(theme)) {
+    return res.status(400).json({ message: "Invalid theme selection" });
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    { theme },
+    { new: true }
+  ).select("-password");
+
+  res.status(200).json({
+    success: true,
+    message: "Theme preference saved",
+    theme: user.theme,
   });
 });
