@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance.js";
 
 const ThemeContext = createContext();
 
@@ -23,18 +23,11 @@ export function ThemeProvider({ children }) {
     const nextTheme = theme === "dark" ? "light" : "dark";
     setTheme(nextTheme); // Smooth instant update on screen
 
-    // Sync theme to MongoDB in the background
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        await axios.put(
-          "http://localhost:5000/api/users/theme",
-          { theme: nextTheme },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      } catch (err) {
-        console.warn("Theme updated locally, server sync failed:", err.message);
-      }
+    // Sync theme to backend using central axiosInstance
+    try {
+      await axiosInstance.put("/user/theme", { theme: nextTheme });
+    } catch (err) {
+      console.warn("Theme updated locally, server sync failed:", err.message);
     }
   };
 
@@ -45,4 +38,6 @@ export function ThemeProvider({ children }) {
   );
 }
 
+// Disable Fast Refresh warning for the custom hook export
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTheme = () => useContext(ThemeContext);

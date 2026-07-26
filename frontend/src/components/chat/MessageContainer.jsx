@@ -13,10 +13,11 @@ const MessageContainer = ({ selectedChat, setChats }) => {
   const { socket } = SocketData();
   const messagesEndRef = useRef(null);
 
-  // Fix: Reliably identify the chat partner instead of hardcoding index [0]
+  // Reliably identify the chat partner instead of hardcoding index [0]
   const chatPartner =
     selectedChat?.users?.find((u) => u._id !== user?._id) || selectedChat?.users?.[0];
 
+  // 1. Socket Listener Effect
   useEffect(() => {
     if (!socket || !selectedChat?._id) return;
 
@@ -45,29 +46,30 @@ const MessageContainer = ({ selectedChat, setChats }) => {
     return () => socket.off("newMessage", handleNewMessage);
   }, [socket, selectedChat, setChats]);
 
-  const fetchMessages = async () => {
-    if (!chatPartner?._id) return;
-    setLoading(true);
-    try {
-      const { data } = await axios.get(
-        `/api/messages/${chatPartner._id}`,
-        { withCredentials: true }
-      );
-      setMessages(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // 2. Fetch Messages Effect
   useEffect(() => {
+    const fetchMessages = async () => {
+      if (!chatPartner?._id) return;
+      setLoading(true);
+      try {
+        const { data } = await axios.get(
+          `/api/messages/${chatPartner._id}`,
+          { withCredentials: true }
+        );
+        setMessages(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (selectedChat) {
       fetchMessages();
     }
-  }, [selectedChat]);
+  }, [selectedChat, chatPartner?._id]);
 
-  // Smooth auto-scroll to bottom whenever messages update
+  // 3. Smooth auto-scroll to bottom whenever messages update
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);

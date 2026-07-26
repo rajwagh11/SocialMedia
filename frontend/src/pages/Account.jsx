@@ -43,33 +43,35 @@ const Account = ({ user }) => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
-  const fetchUser = async () => {
-    try {
-      const { data } = await axiosInstance.get("/user/" + params.id);
-      setUser(data);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchFollowData = async () => {
-    try {
-      const { data } = await axiosInstance.get("/user/followdata/" + User._id);
-      setFollowersData(data.followers || []);
-      setFollowingsData(data.followings || []);
-    } catch (error) {
-      console.error("Error fetching follow data:", error);
-    }
-  };
-
+  // 1. Fetch User Effect
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const { data } = await axiosInstance.get("/user/" + params.id);
+        setUser(data);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (!user) fetchUser();
     else setLoading(false);
   }, [params.id, user]);
 
+  // 2. Fetch Follow Data Effect
   useEffect(() => {
+    const fetchFollowData = async () => {
+      try {
+        const { data } = await axiosInstance.get("/user/followdata/" + User._id);
+        setFollowersData(data.followers || []);
+        setFollowingsData(data.followings || []);
+      } catch (error) {
+        console.error("Error fetching follow data:", error);
+      }
+    };
+
     if (User?._id) {
       fetchFollowData();
       setName(User.name || "");
