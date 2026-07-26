@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import { 
+  HiOutlineCamera, 
+  HiOutlineKey, 
+  HiOutlineArrowRightOnRectangle, 
+  HiOutlineCheck, 
+  HiOutlineXMark,
+  HiOutlineChevronLeft,
+  HiOutlineChevronRight
+} from "react-icons/hi2";
+import { CiEdit } from "react-icons/ci";
+
 import { UserData } from "../context/UserContext";
 import { PostData } from "../context/PostContext";
 import PostCard from "../components/PostCard";
-import { FaArrowDownLong, FaArrowUp } from "react-icons/fa6";
 import Modal from "../components/Modal";
 import axiosInstance from "../api/axiosInstance.js";
 import { Loading } from "../components/Loading";
-import { CiEdit } from "react-icons/ci";
-import toast from "react-hot-toast";
 
 const Account = ({ user }) => {
   const navigate = useNavigate();
@@ -21,11 +30,18 @@ const Account = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState("post");
   const [index, setIndex] = useState(0);
-  const [show, setShow] = useState(false);
-  const [show1, setShow1] = useState(false);
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowings, setShowFollowings] = useState(false);
   const [followersData, setFollowersData] = useState([]);
   const [followingsData, setFollowingsData] = useState([]);
   const [file, setFile] = useState("");
+
+  // Inline Editing States
+  const [showInput, setShowInput] = useState(false);
+  const [name, setName] = useState(user?.name || "");
+  const [showUpdatePass, setShowUpdatePass] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
   const fetchUser = async () => {
     try {
@@ -41,23 +57,11 @@ const Account = ({ user }) => {
   const fetchFollowData = async () => {
     try {
       const { data } = await axiosInstance.get("/user/followdata/" + User._id);
-      setFollowersData(data.followers);
-      setFollowingsData(data.followings);
+      setFollowersData(data.followers || []);
+      setFollowingsData(data.followings || []);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching follow data:", error);
     }
-  };
-
-  const changeFileHandler = (e) => {
-    const file = e.target.files[0];
-    setFile(file);
-  };
-
-  const changeImageHandler = () => {
-    const formdata = new FormData();
-    formdata.append("file", file);
-    updateProfilePic(user._id, formdata, setFile);
-    setFile("");
   };
 
   useEffect(() => {
@@ -66,15 +70,58 @@ const Account = ({ user }) => {
   }, [params.id, user]);
 
   useEffect(() => {
-    if (User?._id) fetchFollowData();
+    if (User?._id) {
+      fetchFollowData();
+      setName(User.name || "");
+    }
   }, [User]);
+
+  const changeFileHandler = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) setFile(selectedFile);
+  };
+
+  const changeImageHandler = () => {
+    if (!file) return;
+    const formdata = new FormData();
+    formdata.append("file", file);
+    updateProfilePic(User._id, formdata, setFile);
+    setFile("");
+  };
 
   const logoutHandler = () => {
     logoutUser(navigate);
   };
 
-  const myPosts = posts?.filter((post) => post.owner?._id === User._id) || [];
-  const myReels = reels?.filter((reel) => reel.owner?._id === User._id) || [];
+  const UpdateName = () => {
+    if (!name.trim()) return;
+    updateProfileName(User._id, name.trim(), setShowInput);
+    setUser((prevUser) => ({
+      ...prevUser,
+      name: name.trim(),
+    }));
+  };
+
+  async function updatePassword(e) {
+    e.preventDefault();
+    try {
+      const { data } = await axiosInstance.post("/user/" + User._id, {
+        oldPassword,
+        newPassword,
+      });
+
+      toast.success(data.message || "Password updated successfully!");
+      setOldPassword("");
+      setNewPassword("");
+      setShowUpdatePass(false);
+    } catch (error) {
+      const msg = error.response?.data?.message || "Failed to update password.";
+      toast.error(msg);
+    }
+  }
+
+  const myPosts = posts?.filter((post) => post.owner?._id === User?._id) || [];
+  const myReels = reels?.filter((reel) => reel.owner?._id === User?._id) || [];
 
   const prevReel = () => {
     if (index > 0) setIndex((prev) => prev - 1);
@@ -84,244 +131,298 @@ const Account = ({ user }) => {
     if (index < myReels.length - 1) setIndex((prev) => prev + 1);
   };
 
-  const [showInput, setShowInput] = useState(false);
-  const [name, setName] = useState(user?.name || "");
-
-  const UpdateName = () => {
-    updateProfileName(user._id, name, setShowInput);
-    setUser((prevUser) => ({
-      ...prevUser,
-      name: name,
-    }));
-  };
-
-  const [showUpdatePass, setShowUpdatePass] = useState(false);
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-
   if (loading || !User) return <Loading />;
-
-  async function updatePassword(e) {
-    e.preventDefault();
-    try {
-      const { data } = await axiosInstance.post("/user/" + user._id, {
-        oldPassword,
-        newPassword,
-      });
-
-      toast.success(data.message);
-      setOldPassword("");
-      setNewPassword("");
-      setShowUpdatePass(false);
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
-  }
 
   return (
     <>
-      {show && <Modal value={followersData} title="Followers" setShow={setShow} />}
-      {show1 && <Modal value={followingsData} title="Followings" setShow={setShow1} />}
+      {showFollowers && (
+        <Modal value={followersData} title="Followers" setShow={setShowFollowers} />
+      )}
+      {showFollowings && (
+        <Modal value={followingsData} title="Followings" setShow={setShowFollowings} />
+      )}
 
-      <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-[#0f172a] to-[#0b1220] pb-20">
-        <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pt-6 pb-12">
-          <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl mb-6">
-            <div className="h-40 w-full bg-gradient-to-r from-amber-600/70 via-orange-500/70 to-red-500/70" />
-            <div className="bg-white/5 backdrop-blur px-6 md:px-10 pb-6 pt-0">
-              <div className="flex flex-col md:flex-row md:items-end gap-6 -mt-16">
-                <div className="shrink-0">
-                  <div className="relative inline-block p-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-400">
+      <div className="min-h-screen w-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-24">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8">
+          
+          {/* --- PROFILE HEADER CARD --- */}
+          <div className="bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 rounded-3xl overflow-hidden shadow-sm mb-8 transition-all">
+            
+            {/* Gradient Banner */}
+            <div className="h-36 sm:h-48 w-full bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 dark:from-indigo-900 dark:via-slate-800 dark:to-purple-900 relative">
+              <div className="absolute inset-0 bg-black/10 backdrop-blur-[2px]" />
+            </div>
+
+            {/* Profile Content Section */}
+            <div className="px-6 sm:px-10 pb-8 pt-0 relative">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 -mt-16 sm:-mt-20 mb-6">
+                
+                {/* Avatar with Camera Overlay */}
+                <div className="relative group self-center sm:self-auto shrink-0">
+                  <div className="p-1.5 rounded-full bg-white dark:bg-slate-800 shadow-md">
                     <img
-                      src={User.profilePic?.url || "/default-avatar.png"}
+                      src={file ? URL.createObjectURL(file) : User.profilePic?.url || "/default-avatar.png"}
                       alt="Profile"
-                      className="w-[140px] h-[140px] md:w-[160px] md:h-[160px] rounded-full border-4 border-slate-900 object-cover"
+                      className="w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover border border-slate-200 dark:border-slate-700"
                     />
                   </div>
+                  
+                  {/* Camera Upload Trigger */}
+                  <input
+                    type="file"
+                    id="profileUpload"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={changeFileHandler}
+                  />
+                  <label
+                    htmlFor="profileUpload"
+                    className="absolute bottom-2 right-2 p-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full shadow-lg cursor-pointer transition-all active:scale-95 flex items-center justify-center"
+                    title="Change profile picture"
+                  >
+                    <HiOutlineCamera className="text-lg" />
+                  </label>
                 </div>
-                <div className="flex-1 text-white">
-                  {showInput ? (
-                    <div className="flex items-center gap-2 mb-2">
-                      <input
-                        className="bg-white/10 backdrop-blur border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                        style={{ width: "200px" }}
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Enter Name"
-                        required
-                      />
-                      <button 
-                        onClick={UpdateName}
-                        className="bg-gradient-to-r from-amber-500 to-orange-400 text-white px-4 py-2 rounded-lg"
-                      >
-                        Update
-                      </button>
-                      <button
-                        className="bg-gradient-to-r from-red-500 to-red-600 text-white p-2 rounded-full"
-                        onClick={() => setShowInput(false)}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ) : (
-                    <h1 className="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-2">
-                      {User.name}{" "}
-                      <button onClick={() => setShowInput(true)} className="text-amber-400 hover:text-amber-300">
-                        <CiEdit />
-                      </button>
-                    </h1>
-                  )}
-                  <p className="text-white/80">{User.email}</p>
-                  <p className="text-white/70 capitalize">{User.gender}</p>
 
-                  <div className="flex items-center gap-6 mt-4">
-                    <button onClick={() => setShow(true)} className="text-white/90 hover:text-white">
-                      <span className="font-semibold">{User.followers?.length || 0}</span> Followers
-                    </button>
-                    <button onClick={() => setShow1(true)} className="text-white/90 hover:text-white">
-                      <span className="font-semibold">{User.followings?.length || 0}</span> Following
-                    </button>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-3">
-                  <div className="flex flex-col gap-2">
-                    <input
-                      type="file"
-                      id="profileUpload"
-                      className="hidden"
-                      accept="image/*"
-                      onChange={changeFileHandler}
-                    />
-                    <label
-                      htmlFor="profileUpload"
-                      className="cursor-pointer bg-white/10 backdrop-blur border border-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/20 transition text-center"
-                    >
-                      Choose File
-                    </label>
+                {/* Action Buttons Bar */}
+                <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2.5">
+                  {file && (
                     <button
-                      className="bg-gradient-to-r from-amber-500 to-orange-400 text-white px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-amber-500/50 transition disabled:opacity-50"
                       onClick={changeImageHandler}
-                      disabled={!file}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-sm transition-all animate-in fade-in"
                     >
-                      Update Profile
+                      <HiOutlineCheck className="text-base" />
+                      <span>Save Avatar</span>
                     </button>
-                  </div>
+                  )}
+
+                  <button
+                    onClick={() => setShowUpdatePass(!showUpdatePass)}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/80 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer"
+                  >
+                    <HiOutlineKey className="text-base text-indigo-500 dark:text-indigo-400" />
+                    <span>{showUpdatePass ? "Close Password" : "Password"}</span>
+                  </button>
+
                   <button
                     onClick={logoutHandler}
-                    className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-red-500/50 transition"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-red-50 hover:bg-red-100 dark:bg-red-500/10 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer"
                   >
-                    Logout
+                    <HiOutlineArrowRightOnRectangle className="text-base" />
+                    <span>Logout</span>
                   </button>
                 </div>
               </div>
+
+              {/* User Info & Inline Name Editing */}
+              <div className="text-center sm:text-left space-y-1.5">
+                {showInput ? (
+                  <div className="flex items-center justify-center sm:justify-start gap-2 max-w-xs mx-auto sm:mx-0 mb-2">
+                    <input
+                      type="text"
+                      className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Enter Name"
+                      autoFocus
+                    />
+                    <button
+                      onClick={UpdateName}
+                      className="p-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl transition-all"
+                      title="Save name"
+                    >
+                      <HiOutlineCheck className="text-base" />
+                    </button>
+                    <button
+                      onClick={() => setShowInput(false)}
+                      className="p-2 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 rounded-xl transition-all"
+                      title="Cancel"
+                    >
+                      <HiOutlineXMark className="text-base" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="inline-flex items-center gap-2">
+                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                      {User.name}
+                    </h1>
+                    <button
+                      onClick={() => setShowInput(true)}
+                      className="text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer p-1"
+                      title="Edit name"
+                    >
+                      <CiEdit className="text-xl stroke-1" />
+                    </button>
+                  </div>
+                )}
+
+                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{User.email}</p>
+                <p className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
+                  {User.gender || "Not specified"}
+                </p>
+
+                {/* Followers / Following Badges */}
+                <div className="flex items-center justify-center sm:justify-start gap-6 pt-4 border-t border-slate-100 dark:border-slate-700/60 mt-4">
+                  <button
+                    onClick={() => setShowFollowers(true)}
+                    className="flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+                  >
+                    <span className="font-bold text-slate-900 dark:text-white text-base">
+                      {User.followers?.length || 0}
+                    </span>
+                    <span>Followers</span>
+                  </button>
+                  <button
+                    onClick={() => setShowFollowings(true)}
+                    className="flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+                  >
+                    <span className="font-bold text-slate-900 dark:text-white text-base">
+                      {User.followings?.length || 0}
+                    </span>
+                    <span>Following</span>
+                  </button>
+                </div>
+              </div>
+
             </div>
           </div>
 
-          <div className="rounded-2xl overflow-hidden bg-white/5 backdrop-blur border border-white/10 shadow-xl mb-6">
-            <button
-              onClick={() => setShowUpdatePass(!showUpdatePass)}
-              className="w-full bg-gradient-to-r from-indigo-500/20 to-sky-500/20 hover:from-indigo-500/30 hover:to-sky-500/30 text-white px-6 py-3 rounded-t-2xl transition-all"
-            >
-              {showUpdatePass ? "✕ Close" : "🔒 Update Password"}
-            </button>
-
-            {showUpdatePass && (
-              <form
-                onSubmit={updatePassword}
-                className="p-6 space-y-4"
-              >
+          {/* --- COLLAPSIBLE PASSWORD CARD --- */}
+          {showUpdatePass && (
+            <div className="max-w-md mx-auto bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 rounded-2xl p-6 shadow-lg mb-8 animate-in fade-in zoom-in-95 duration-200">
+              <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
+                <HiOutlineKey className="text-indigo-500 text-lg" />
+                <span>Change Account Password</span>
+              </h3>
+              <form onSubmit={updatePassword} className="space-y-3.5">
                 <input
                   type="password"
-                  className="w-full bg-white/10 backdrop-blur border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  placeholder="Old Password"
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  placeholder="Current Password"
                   value={oldPassword}
                   onChange={(e) => setOldPassword(e.target.value)}
                   required
                 />
                 <input
                   type="password"
-                  className="w-full bg-white/10 backdrop-blur border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="New Password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
                 />
-                <button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-indigo-500 to-sky-400 text-white px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-indigo-500/50 transition"
-                >
-                  Update Password
-                </button>
+                <div className="flex justify-end gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setShowUpdatePass(false)}
+                    className="px-4 py-2 text-xs font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl shadow-sm transition-all active:scale-95"
+                  >
+                    Update Password
+                  </button>
+                </div>
               </form>
-            )}
-          </div>
+            </div>
+          )}
 
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3 bg-white/10 backdrop-blur p-1 rounded-full border border-white/10">
+          {/* --- CONTENT TABS SWITCHER --- */}
+          <div className="flex justify-center mb-8">
+            <div className="inline-flex p-1 bg-slate-200/70 dark:bg-slate-800/80 border border-slate-300/50 dark:border-slate-700/60 rounded-2xl shadow-inner">
               <button
                 onClick={() => setType("post")}
-                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                className={`px-6 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
                   type === "post"
-                    ? "bg-gradient-to-r from-amber-500 to-orange-400 text-white shadow-md shadow-amber-200"
-                    : "bg-white/70 text-gray-700 hover:bg-white"
+                    ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                Posts
+                Posts ({myPosts.length})
               </button>
               <button
                 onClick={() => setType("reel")}
-                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                className={`px-6 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
                   type === "reel"
-                    ? "bg-gradient-to-r from-indigo-500 to-sky-400 text-white shadow-md shadow-sky-200"
-                    : "bg-white/70 text-gray-700 hover:bg-white"
+                    ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                Reels
+                Reels ({myReels.length})
               </button>
             </div>
           </div>
 
-          {type === "post" &&
-            (myPosts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {myPosts.map((post) => (
-                  <PostCard type="post" value={post} key={post._id} layout="grid" />
-                ))}
-              </div>
-            ) : (
-              <p className="text-white/80 text-center py-12">No post yet</p>
-            ))}
+          {/* --- CENTERED FEED AREA --- */}
+          <div className="max-w-xl mx-auto w-full">
+            
+            {/* POSTS FEED */}
+            {type === "post" && (
+              myPosts.length > 0 ? (
+                <div className="flex flex-col gap-6">
+                  {myPosts.map((post) => (
+                    <PostCard type="post" value={post} key={post._id} layout="list" />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-16 bg-white dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800 rounded-3xl">
+                  <p className="text-sm font-medium text-slate-400">No posts published yet.</p>
+                </div>
+              )
+            )}
 
-          {type === "reel" &&
-            (myReels.length > 0 ? (
-              <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-                {index > 0 && (
-                  <button
-                    className="bg-gradient-to-r from-indigo-500 to-sky-400 text-white py-4 px-4 rounded-full hover:shadow-lg hover:shadow-indigo-500/50 transition-all"
-                    onClick={prevReel}
-                  >
-                    <FaArrowUp />
-                  </button>
-                )}
+            {/* REELS FEED */}
+            {type === "reel" && (
+              myReels.length > 0 ? (
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-full">
+                    <PostCard
+                      type="reel"
+                      value={myReels[index]}
+                      key={myReels[index]._id}
+                      layout="list"
+                    />
+                  </div>
 
-                <PostCard
-                  type="reel"
-                  value={myReels[index]}
-                  key={myReels[index]._id}
-                  layout="list"
-                />
+                  {/* Centered Reel Navigation Controls */}
+                  {myReels.length > 1 && (
+                    <div className="flex items-center gap-4 mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-2xl shadow-sm">
+                      <button
+                        onClick={prevReel}
+                        disabled={index === 0}
+                        className="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 hover:text-indigo-600 disabled:opacity-40 disabled:pointer-events-none transition-all cursor-pointer"
+                        title="Previous Reel"
+                      >
+                        <HiOutlineChevronLeft className="text-lg" />
+                      </button>
+                      
+                      <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                        {index + 1} of {myReels.length}
+                      </span>
 
-                {index < myReels.length - 1 && (
-                  <button
-                    className="bg-gradient-to-r from-indigo-500 to-sky-400 text-white py-4 px-4 rounded-full hover:shadow-lg hover:shadow-indigo-500/50 transition-all"
-                    onClick={nextReel}
-                  >
-                    <FaArrowDownLong />
-                  </button>
-                )}
-              </div>
-            ) : (
-              <p className="text-white/80 text-center py-12">No Reel yet</p>
-            ))}
+                      <button
+                        onClick={nextReel}
+                        disabled={index === myReels.length - 1}
+                        className="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 hover:text-indigo-600 disabled:opacity-40 disabled:pointer-events-none transition-all cursor-pointer"
+                        title="Next Reel"
+                      >
+                        <HiOutlineChevronRight className="text-lg" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-16 bg-white dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800 rounded-3xl">
+                  <p className="text-sm font-medium text-slate-400">No reels published yet.</p>
+                </div>
+              )
+            )}
+
+          </div>
+
         </div>
       </div>
     </>
