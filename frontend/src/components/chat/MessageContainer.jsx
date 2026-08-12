@@ -77,7 +77,7 @@ const MessageContainer = ({ selectedChat, setChats }) => {
   if (!selectedChat) return null;
 
   return (
-    <div className="h-full rounded-2xl overflow-hidden bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 shadow-sm flex flex-col transition-colors duration-300">
+    <div className="h-full rounded-2xl overflow-hidden bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 shadow-sm flex flex-col min-h-0 transition-colors duration-300">
       {/* Chat Header */}
       <div className="flex items-center gap-3.5 px-5 py-3.5 bg-slate-50/80 dark:bg-slate-800/50 border-b border-slate-200/80 dark:border-slate-700/60">
         <img
@@ -89,7 +89,7 @@ const MessageContainer = ({ selectedChat, setChats }) => {
             e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(chatPartner?.name || "User")}&background=6366f1&color=fff`;
           }}
           alt="Profile"
-          className="w-10 h-10 rounded-full object-cover ring-2 ring-indigo-500/20"
+          className="w-10 h-10 rounded-full object-cover ring-2 ring-teal-500/20"
         />
         <div>
           <h2 className="text-slate-800 dark:text-slate-100 text-sm font-semibold leading-tight">
@@ -108,7 +108,7 @@ const MessageContainer = ({ selectedChat, setChats }) => {
         </div>
       ) : (
         <>
-          <div className="flex-1 flex flex-col gap-3 p-4 overflow-y-auto bg-slate-100/50 dark:bg-slate-950/40 custom-scrollbar">
+          <div className="flex-1 flex flex-col gap-3 p-4 overflow-y-auto min-h-0 bg-slate-100/50 dark:bg-slate-950/40 custom-scrollbar">
             {messages && messages.length > 0 ? (
               messages.map((e, index) => (
                 <Message

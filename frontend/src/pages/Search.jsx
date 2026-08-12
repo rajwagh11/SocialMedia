@@ -20,29 +20,27 @@
       }
     }
     return (
-      <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-[#0f172a] to-[#0b1220] pb-20">
+      <div className="min-h-screen w-full bg-slate-50 dark:bg-slate-900 pb-20">
         <div className="max-w-4xl mx-auto px-4 md:px-6 lg:px-8 py-6">
-          <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 text-3xl font-bold mb-6">
+          <h1 className="text-slate-800 dark:text-slate-100 text-2xl font-bold mb-6">
             Discover People
           </h1>
-          
-          <div className="rounded-2xl p-0.5 bg-gradient-to-r from-emerald-500/60 via-teal-400/60 to-cyan-400/60 mb-6">
-            <div className="rounded-2xl bg-white/10 backdrop-blur-md p-6">
-              <div className="flex flex-col sm:flex-row gap-4 items-center">
-                <input
-                  type="text"
-                  className="flex-1 w-full bg-white/10 backdrop-blur border border-white/20 rounded-full px-6 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  placeholder="Search by name..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <button
-                  onClick={fetchUsers}
-                  className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-8 py-3 rounded-full hover:shadow-lg hover:shadow-emerald-500/50 transition-all font-semibold whitespace-nowrap"
-                >
-                  Search
-                </button>
-              </div>
+
+          <div className="rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 shadow-sm mb-6">
+            <div className="flex flex-col sm:flex-row gap-4 items-center">
+              <input
+                type="text"
+                className="flex-1 w-full bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700/60 rounded-full px-6 py-3 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/40"
+                placeholder="Search by name..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <button
+                onClick={fetchUsers}
+                className="bg-teal-600 hover:bg-teal-500 text-white px-8 py-3 rounded-full transition-colors font-semibold whitespace-nowrap"
+              >
+                Search
+              </button>
             </div>
           </div>
 
@@ -57,24 +55,24 @@
                   {users.map((e) => (
                     <Link
                       key={e._id}
-                      className="rounded-2xl overflow-hidden bg-white/5 backdrop-blur border border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all p-4 flex items-center gap-4 hover:bg-white/10"
+                      className="rounded-2xl overflow-hidden bg-white/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all p-4 flex items-center gap-4"
                       to={`/user/${e._id}`}
                     >
                       <img
                         src={e.profilePic?.url || "/default-avatar.png"}
                         alt={e.name}
-                        className="w-14 h-14 rounded-full border-2 border-white/20 object-cover"
+                        className="w-14 h-14 rounded-full border border-slate-200 dark:border-slate-700 object-cover"
                       />
                       <div className="flex-1 min-w-0">
-                        <p className="text-white font-semibold truncate">{e.name}</p>
-                        <p className="text-white/60 text-sm truncate">{e.email}</p>
+                        <p className="text-slate-800 dark:text-slate-100 font-semibold truncate">{e.name}</p>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm truncate">{e.email}</p>
                       </div>
                     </Link>
                   ))}
                 </div>
               ) : (
                 <div className="text-center py-20">
-                  <p className="text-white/60 text-lg">No users found. Try a different search!</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-lg">No users found. Try a different search!</p>
                 </div>
               )}
             </>

@@ -77,7 +77,7 @@ const PostCard = ({ type, value, layout = "grid" }) => {
 
   const cardWrapperClass =
     layout === "grid"
-      ? "rounded-2xl overflow-hidden bg-white/90 dark:bg-slate-800/80 backdrop-blur-md border border-slate-200/80 dark:border-slate-700/60 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between"
+      ? "h-full rounded-2xl overflow-hidden bg-white/90 dark:bg-slate-800/80 backdrop-blur-md border border-slate-200/80 dark:border-slate-700/60 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between"
       : "rounded-2xl overflow-hidden bg-white/90 dark:bg-slate-800/80 backdrop-blur-md border border-slate-200/80 dark:border-slate-700/60 shadow-sm transition-all duration-300 w-full max-w-2xl mx-auto";
 
   return (
@@ -109,10 +109,10 @@ const PostCard = ({ type, value, layout = "grid" }) => {
                 <img
                   src={value.owner?.profilePic?.url || "/default-avatar.png"}
                   alt="profile"
-                  className="w-9 h-9 rounded-full object-cover ring-2 ring-indigo-500/20 group-hover:ring-indigo-500/50 transition-all"
+                  className="w-9 h-9 rounded-full object-cover ring-2 ring-teal-500/20 group-hover:ring-teal-500/50 transition-all"
                 />
                 <div>
-                  <p className="text-slate-800 dark:text-slate-100 font-semibold text-sm group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                  <p className="text-slate-800 dark:text-slate-100 font-semibold text-sm group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
                     {value.owner?.name}
                   </p>
                   <p className="text-slate-400 dark:text-slate-500 text-[11px] font-medium">{formatDate}</p>
@@ -140,38 +140,40 @@ const PostCard = ({ type, value, layout = "grid" }) => {
           </div>
 
           {/* Caption & Inline Edit Area */}
-          <div className="px-4 sm:px-5 py-3">
-            {showInput ? (
-              <div className="flex items-center gap-2 my-1">
-                <input
-                  className="flex-1 bg-slate-100 dark:bg-slate-900/60 border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-1.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/40"
-                  type="text"
-                  placeholder="Enter Caption"
-                  value={caption}
-                  onChange={(e) => setCaption(e.target.value)}
-                />
-                <button
-                  onClick={updateCaption}
-                  disabled={captionLoading}
-                  className="text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-2 rounded-xl transition-all shadow-sm active:scale-95 disabled:opacity-50"
-                >
-                  {captionLoading ? "..." : "Save"}
-                </button>
-                <button
-                  onClick={() => setShowInput(false)}
-                  className="text-xs font-semibold bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 px-2.5 py-2 rounded-xl transition-all active:scale-95"
-                >
-                  ✕
-                </button>
-              </div>
-            ) : (
-              value.caption && (
-                <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed break-words">
-                  {value.caption}
-                </p>
-              )
-            )}
-          </div>
+          {(showInput || value.caption) && (
+            <div className="px-4 sm:px-5 py-3">
+              {showInput ? (
+                <div className="flex items-center gap-2 my-1">
+                  <input
+                    className="flex-1 bg-slate-100 dark:bg-slate-900/60 border border-slate-300 dark:border-slate-600 rounded-xl px-3 py-1.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/40"
+                    type="text"
+                    placeholder="Enter Caption"
+                    value={caption}
+                    onChange={(e) => setCaption(e.target.value)}
+                  />
+                  <button
+                    onClick={updateCaption}
+                    disabled={captionLoading}
+                    className="text-xs font-semibold bg-teal-600 hover:bg-teal-500 text-white px-3 py-2 rounded-xl transition-all shadow-sm active:scale-95 disabled:opacity-50"
+                  >
+                    {captionLoading ? "..." : "Save"}
+                  </button>
+                  <button
+                    onClick={() => setShowInput(false)}
+                    className="text-xs font-semibold bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 px-2.5 py-2 rounded-xl transition-all active:scale-95"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ) : (
+                value.caption && (
+                  <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed break-words">
+                    {value.caption}
+                  </p>
+                )
+              )}
+            </div>
+          )}
 
           {/* Media Rendering */}
           <div className="w-full bg-slate-950/5 dark:bg-slate-950/40 overflow-hidden">
@@ -218,7 +220,7 @@ const PostCard = ({ type, value, layout = "grid" }) => {
             </div>
 
             <button
-              className="flex items-center gap-1.5 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors active:scale-95"
+              className="flex items-center gap-1.5 hover:text-teal-600 dark:hover:text-teal-400 transition-colors active:scale-95"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -239,12 +241,12 @@ const PostCard = ({ type, value, layout = "grid" }) => {
                   type="text"
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
-                  className="flex-1 px-3.5 py-2 border border-slate-200 dark:border-slate-700/60 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all outline-none text-xs sm:text-sm text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800 placeholder-slate-400"
+                  className="flex-1 px-3.5 py-2 border border-slate-200 dark:border-slate-700/60 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all outline-none text-xs sm:text-sm text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800 placeholder-slate-400"
                   placeholder="Write a comment..."
                   required
                 />
                 <button
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl px-4 py-2 text-xs font-semibold shadow-sm transition-all active:scale-95 whitespace-nowrap flex-shrink-0"
+                  className="bg-teal-600 hover:bg-teal-500 text-white rounded-xl px-4 py-2 text-xs font-semibold shadow-sm transition-all active:scale-95 whitespace-nowrap flex-shrink-0"
                   type="submit"
                 >
                   Post
@@ -266,7 +268,7 @@ const PostCard = ({ type, value, layout = "grid" }) => {
                     {value.comments.length > 2 && (
                       <button
                         onClick={() => setShowAllComments(!showAllComments)}
-                        className="w-full text-left mt-2 text-indigo-600 dark:text-indigo-400 hover:underline text-xs font-medium transition-colors py-1"
+                        className="w-full text-left mt-2 text-teal-600 dark:text-teal-400 hover:underline text-xs font-medium transition-colors py-1"
                       >
                         {showAllComments
                           ? "Show less comments"

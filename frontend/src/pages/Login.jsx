@@ -13,38 +13,37 @@ const Login = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log("🔑 submitHandler fired:", { email, password });
     loginUser(email, password, navigate, fetchPosts);
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 py-8 px-4">
-      <div className="w-full max-w-5xl flex shadow-2xl rounded-3xl overflow-hidden bg-white transform transition-all duration-300 hover:shadow-3xl">
+    <div className="flex justify-center items-center min-h-screen bg-slate-50 dark:bg-slate-900 py-8 px-4">
+      <div className="w-full max-w-5xl flex shadow-lg rounded-3xl overflow-hidden bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80">
         <div className="w-full md:w-3/5 p-8 md:p-12">
           <div className="text-center mb-8">
-            <div className="inline-block p-3 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl mb-4">
+            <div className="inline-block p-3 bg-teal-600 rounded-2xl mb-4">
               <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
-            <h1 className="font-bold text-3xl md:text-4xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+            <h1 className="font-bold text-3xl md:text-4xl text-slate-800 dark:text-slate-100 mb-2">
               Welcome Back
             </h1>
-            <p className="text-gray-500 text-sm">Login to continue your social journey</p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">Login to continue your social journey</p>
           </div>
 
           <form onSubmit={submitHandler} className="space-y-6">   
             <div className="space-y-5">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                   </svg>
                 </div>
                 <input
                   type="email"
                   placeholder="Email address"
-                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 outline-none text-gray-700"
+                  className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 outline-none text-slate-700 dark:text-slate-100 placeholder-slate-400"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -53,14 +52,14 @@ const Login = () => {
               
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                 </div>
                 <input
                   type="password"
                   placeholder="Password"
-                  className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 outline-none text-gray-700"
+                  className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 outline-none text-slate-700 dark:text-slate-100 placeholder-slate-400"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -70,7 +69,7 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transform hover:scale-[1.02] transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3.5 bg-teal-600 hover:bg-teal-500 text-white font-semibold rounded-xl transition-colors duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <span className="flex items-center justify-center">
@@ -87,10 +86,10 @@ const Login = () => {
             </div>
 
             <div className="text-center md:hidden pt-4">
-              <p className="text-gray-600 text-sm mb-3">Don't have an account?</p>
+              <p className="text-slate-600 dark:text-slate-400 text-sm mb-3">Don't have an account?</p>
               <Link
                 to="/register"
-                className="text-indigo-600 font-semibold hover:text-purple-600 transition-colors"
+                className="text-teal-600 dark:text-teal-400 font-semibold hover:underline transition-colors"
               >
                 Create Account →
               </Link>
@@ -99,11 +98,7 @@ const Login = () => {
         </div>
 
         {/* Side Panel */}
-        <div className="hidden md:flex w-2/5 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white flex-col justify-center items-center p-10 relative overflow-hidden">
-          {/* Decorative circles */}
-          <div className="absolute top-10 right-10 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl"></div>
-          <div className="absolute bottom-10 left-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
-          
+        <div className="hidden md:flex w-2/5 bg-teal-600 text-white flex-col justify-center items-center p-10 relative overflow-hidden">
           <div className="relative z-10 text-center space-y-6">
             <div className="mb-6">
               <svg className="w-20 h-20 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,12 +106,12 @@ const Login = () => {
               </svg>
             </div>
             <h1 className="text-4xl font-bold leading-tight">New Here?</h1>
-            <p className="text-indigo-100 text-base px-4">
+            <p className="text-teal-50 text-base px-4">
               Join our community and connect with friends around the world
             </p>
             <Link
               to="/register"
-              className="inline-block mt-6 bg-white text-indigo-600 px-8 py-3 rounded-full font-semibold hover:bg-indigo-50 transition-all duration-200 transform hover:scale-105 shadow-lg"
+              className="inline-block mt-6 bg-white text-teal-600 px-8 py-3 rounded-full font-semibold hover:bg-teal-50 transition-colors shadow-sm"
             >
               Create Account
             </Link>

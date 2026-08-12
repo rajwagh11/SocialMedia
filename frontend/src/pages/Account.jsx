@@ -150,10 +150,8 @@ const Account = ({ user }) => {
           {/* --- PROFILE HEADER CARD --- */}
           <div className="bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 rounded-3xl overflow-hidden shadow-sm mb-8 transition-all">
             
-            {/* Gradient Banner */}
-            <div className="h-36 sm:h-48 w-full bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 dark:from-indigo-900 dark:via-slate-800 dark:to-purple-900 relative">
-              <div className="absolute inset-0 bg-black/10 backdrop-blur-[2px]" />
-            </div>
+            {/* Banner */}
+            <div className="h-36 sm:h-48 w-full bg-teal-600 dark:bg-teal-800" />
 
             {/* Profile Content Section */}
             <div className="px-6 sm:px-10 pb-8 pt-0 relative">
@@ -179,7 +177,7 @@ const Account = ({ user }) => {
                   />
                   <label
                     htmlFor="profileUpload"
-                    className="absolute bottom-2 right-2 p-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full shadow-lg cursor-pointer transition-all active:scale-95 flex items-center justify-center"
+                    className="absolute bottom-2 right-2 p-2.5 bg-teal-600 hover:bg-teal-500 text-white rounded-full shadow-lg cursor-pointer transition-all active:scale-95 flex items-center justify-center"
                     title="Change profile picture"
                   >
                     <HiOutlineCamera className="text-lg" />
@@ -191,7 +189,7 @@ const Account = ({ user }) => {
                   {file && (
                     <button
                       onClick={changeImageHandler}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-sm transition-all animate-in fade-in"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-sm transition-all animate-in fade-in"
                     >
                       <HiOutlineCheck className="text-base" />
                       <span>Save Avatar</span>
@@ -202,13 +200,13 @@ const Account = ({ user }) => {
                     onClick={() => setShowUpdatePass(!showUpdatePass)}
                     className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/80 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer"
                   >
-                    <HiOutlineKey className="text-base text-indigo-500 dark:text-indigo-400" />
+                    <HiOutlineKey className="text-base text-teal-500 dark:text-teal-400" />
                     <span>{showUpdatePass ? "Close Password" : "Password"}</span>
                   </button>
 
                   <button
                     onClick={logoutHandler}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-red-50 hover:bg-red-100 dark:bg-red-500/10 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-rose-50 hover:bg-rose-100 dark:bg-rose-500/10 dark:hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer"
                   >
                     <HiOutlineArrowRightOnRectangle className="text-base" />
                     <span>Logout</span>
@@ -222,7 +220,7 @@ const Account = ({ user }) => {
                   <div className="flex items-center justify-center sm:justify-start gap-2 max-w-xs mx-auto sm:mx-0 mb-2">
                     <input
                       type="text"
-                      className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Enter Name"
@@ -230,7 +228,7 @@ const Account = ({ user }) => {
                     />
                     <button
                       onClick={UpdateName}
-                      className="p-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl transition-all"
+                      className="p-2 bg-teal-600 hover:bg-teal-500 text-white rounded-xl transition-all"
                       title="Save name"
                     >
                       <HiOutlineCheck className="text-base" />
@@ -250,7 +248,7 @@ const Account = ({ user }) => {
                     </h1>
                     <button
                       onClick={() => setShowInput(true)}
-                      className="text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer p-1"
+                      className="text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors cursor-pointer p-1"
                       title="Edit name"
                     >
                       <CiEdit className="text-xl stroke-1" />
@@ -259,7 +257,7 @@ const Account = ({ user }) => {
                 )}
 
                 <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{User.email}</p>
-                <p className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
+                <p className="text-xs font-semibold text-teal-600 dark:text-teal-400 uppercase tracking-wider">
                   {User.gender || "Not specified"}
                 </p>
 
@@ -267,7 +265,7 @@ const Account = ({ user }) => {
                 <div className="flex items-center justify-center sm:justify-start gap-6 pt-4 border-t border-slate-100 dark:border-slate-700/60 mt-4">
                   <button
                     onClick={() => setShowFollowers(true)}
-                    className="flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors cursor-pointer"
                   >
                     <span className="font-bold text-slate-900 dark:text-white text-base">
                       {User.followers?.length || 0}
@@ -276,7 +274,7 @@ const Account = ({ user }) => {
                   </button>
                   <button
                     onClick={() => setShowFollowings(true)}
-                    className="flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors cursor-pointer"
                   >
                     <span className="font-bold text-slate-900 dark:text-white text-base">
                       {User.followings?.length || 0}
@@ -293,13 +291,13 @@ const Account = ({ user }) => {
           {showUpdatePass && (
             <div className="max-w-md mx-auto bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 rounded-2xl p-6 shadow-lg mb-8 animate-in fade-in zoom-in-95 duration-200">
               <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
-                <HiOutlineKey className="text-indigo-500 text-lg" />
+                <HiOutlineKey className="text-teal-500 text-lg" />
                 <span>Change Account Password</span>
               </h3>
               <form onSubmit={updatePassword} className="space-y-3.5">
                 <input
                   type="password"
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
                   placeholder="Current Password"
                   value={oldPassword}
                   onChange={(e) => setOldPassword(e.target.value)}
@@ -307,7 +305,7 @@ const Account = ({ user }) => {
                 />
                 <input
                   type="password"
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
                   placeholder="New Password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
@@ -323,7 +321,7 @@ const Account = ({ user }) => {
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl shadow-sm transition-all active:scale-95"
+                    className="px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white text-xs font-semibold rounded-xl shadow-sm transition-all active:scale-95"
                   >
                     Update Password
                   </button>
@@ -339,7 +337,7 @@ const Account = ({ user }) => {
                 onClick={() => setType("post")}
                 className={`px-6 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
                   type === "post"
-                    ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm"
+                    ? "bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400 shadow-sm"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
@@ -349,7 +347,7 @@ const Account = ({ user }) => {
                 onClick={() => setType("reel")}
                 className={`px-6 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
                   type === "reel"
-                    ? "bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm"
+                    ? "bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400 shadow-sm"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
@@ -395,7 +393,7 @@ const Account = ({ user }) => {
                       <button
                         onClick={prevReel}
                         disabled={index === 0}
-                        className="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 hover:text-indigo-600 disabled:opacity-40 disabled:pointer-events-none transition-all cursor-pointer"
+                        className="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-500/20 hover:text-teal-600 disabled:opacity-40 disabled:pointer-events-none transition-all cursor-pointer"
                         title="Previous Reel"
                       >
                         <HiOutlineChevronLeft className="text-lg" />
@@ -408,7 +406,7 @@ const Account = ({ user }) => {
                       <button
                         onClick={nextReel}
                         disabled={index === myReels.length - 1}
-                        className="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 hover:text-indigo-600 disabled:opacity-40 disabled:pointer-events-none transition-all cursor-pointer"
+                        className="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-500/20 hover:text-teal-600 disabled:opacity-40 disabled:pointer-events-none transition-all cursor-pointer"
                         title="Next Reel"
                       >
                         <HiOutlineChevronRight className="text-lg" />

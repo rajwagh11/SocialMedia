@@ -61,7 +61,7 @@ const MessageInput = ({ setMessages, selectedChat }) => {
         type="text"
         placeholder="Type a message..."
         disabled={loading}
-        className="flex-1 bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/60 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all shadow-2xs disabled:opacity-60"
+        className="flex-1 bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/60 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all shadow-2xs disabled:opacity-60"
         value={textMsg}
         onChange={(e) => setTextMsg(e.target.value)}
         required
@@ -69,7 +69,7 @@ const MessageInput = ({ setMessages, selectedChat }) => {
       <button
         type="submit"
         disabled={loading || !textMsg.trim()}
-        className="flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm shadow-sm transition-all active:scale-95 flex-shrink-0 cursor-pointer"
+        className="flex items-center justify-center gap-1.5 bg-teal-600 hover:bg-teal-500 disabled:opacity-50 text-white px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm shadow-sm transition-all active:scale-95 flex-shrink-0 cursor-pointer"
         aria-label="Send message"
       >
         <span>Send</span>

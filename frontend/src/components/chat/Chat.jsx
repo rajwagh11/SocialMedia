@@ -29,12 +29,12 @@ const Chat = ({ chat, setSelectedChat, isOnline }) => {
           onError={(e) => {
             e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6366f1&color=fff`;
           }}
-          className="w-12 h-12 rounded-full object-cover ring-2 ring-slate-200/80 dark:ring-slate-700/80 group-hover:ring-indigo-500/50 transition-all"
+          className="w-12 h-12 rounded-full object-cover ring-2 ring-slate-200/80 dark:ring-slate-700/80 group-hover:ring-teal-500/50 transition-all"
           alt={user.name}
         />
         {isOnline && (
           <span
-            className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 dark:bg-emerald-400 rounded-full border-2 border-white dark:border-slate-800 shadow-xs"
+            className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-teal-500 dark:bg-teal-400 rounded-full border-2 border-white dark:border-slate-800 shadow-xs"
             title="Online"
           />
         )}
@@ -43,7 +43,7 @@ const Chat = ({ chat, setSelectedChat, isOnline }) => {
       {/* User Name & Latest Message Preview */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between mb-0.5">
-          <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
+          <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-100 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors truncate">
             {user.name}
           </h4>
         </div>
@@ -51,7 +51,7 @@ const Chat = ({ chat, setSelectedChat, isOnline }) => {
         <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
           {isMyMessage && (
             <BsSendCheck
-              className="text-indigo-600 dark:text-indigo-400 text-sm flex-shrink-0"
+              className="text-teal-600 dark:text-teal-400 text-sm flex-shrink-0"
               title="Sent by you"
             />
           )}

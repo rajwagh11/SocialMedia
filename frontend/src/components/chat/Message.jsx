@@ -8,7 +8,7 @@ const Message = ({ ownMessage, message }) => {
       <div
         className={`max-w-[75%] sm:max-w-[65%] px-3.5 py-2.5 rounded-2xl shadow-2xs transition-all ${
           ownMessage
-            ? "bg-indigo-600 text-white rounded-br-xs font-normal"
+            ? "bg-teal-600 text-white rounded-br-xs font-normal"
             : "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-slate-700/60 rounded-bl-xs font-normal"
         }`}
       >

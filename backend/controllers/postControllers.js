@@ -16,7 +16,6 @@ export const newPost = TryCatch(async (req, res) => {
   let option;
   const type = req.query.type;
 
-  
   if (type === "reel") {
     option = { resource_type: "video", access_mode: "public" };
   } else if (file.mimetype === "application/pdf") {
@@ -30,18 +29,31 @@ export const newPost = TryCatch(async (req, res) => {
 
   let allowed = true;
   let reasons = [];
+
+  // FIX: param key must be `imageBuffer` to match moderateMediaAndText's destructuring.
+  // Previously this was `imageBytes` / `imageMimeType`, which meant `imageBuffer`
+  // was always undefined inside the function -> moderation silently auto-passed
+  // every single image (`if (!imageBuffer) return { allowed: true, reasons: [] }`).
   if (type !== "reel" && file.mimetype !== "application/pdf") {
-    const moderation = await moderateMediaAndText({
-      imageBytes: file.buffer,
-      imageMimeType: file.mimetype,
+    console.log("Moderation input:", {
+      hasBuffer: !!file.buffer,
+      bufferLen: file.buffer?.length,
+      mimetype: file.mimetype,
       caption,
     });
+
+    const moderation = await moderateMediaAndText({
+      imageBuffer: file.buffer,
+      caption,
+    });
+
+    console.log("Moderation result:", moderation);
+
     allowed = moderation.allowed;
     reasons = moderation.reasons;
   } else {
     const moderation = await moderateMediaAndText({
-      imageBytes: undefined,
-      imageMimeType: undefined,
+      imageBuffer: undefined,
       caption,
     });
     allowed = moderation.allowed;
@@ -70,39 +82,39 @@ export const newPost = TryCatch(async (req, res) => {
 
 export const deletePost = TryCatch(async (req, res) => {
     const post = await Post.findById(req.params.id);
-  
+
     if (!post) {
       return res.status(404).json({ message: "No post with this id" });
     }
 
-    if (post.owner.toString() !== req.user._id.toString()) { 
+    if (post.owner.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "Unauthorized" });
     }
-  
+
     await cloudinary.v2.uploader.destroy(post.post.id);
 
     await post.deleteOne();
-  
+
     res.json({ message: "Post deleted" });
   });
 
   export const getAllPosts = TryCatch(async (req, res) => {
     const currentUser = await User.findById(req.user._id);
-    
+
     if (!currentUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
     const allPosts = await Post.find({ type: "post" })
-      .sort({ createdAt: -1 })  
-      .populate("owner","-password") 
+      .sort({ createdAt: -1 })
+      .populate("owner","-password")
       .populate({
-        path:"comments.user",  
+        path:"comments.user",
         select:"-password",
       })
-    
+
     const allReels = await Post.find({ type: "reel" })
-      .sort({ createdAt: -1 }) 
+      .sort({ createdAt: -1 })
       .populate("owner","-password")
       .populate({
         path:"comments.user",
@@ -136,7 +148,7 @@ export const likeUnlikePost = TryCatch(async(req,res) => {
       });
     }else{
       post.likes.push(req.user._id)
-      
+
       await post.save();
 
       res.json({
@@ -192,11 +204,11 @@ export const deleteComment = TryCatch(async (req, res) => {
   }
 
   const comment = post.comments[commentIndex];
- 
-  if (post.owner.toString() === req.user._id.toString() || comment.user.toString() === req.user._id.toString()) {
-    post.comments.splice(commentIndex, 1); 
 
-    await post.save(); 
+  if (post.owner.toString() === req.user._id.toString() || comment.user.toString() === req.user._id.toString()) {
+    post.comments.splice(commentIndex, 1);
+
+    await post.save();
 
     return res.json({
       message: "Comment deleted",
@@ -223,7 +235,7 @@ export const editCaption = TryCatch(async (req, res) => {
     });
   }
 
-  post.caption = req.body.caption; 
+  post.caption = req.body.caption;
 
   await post.save();
 

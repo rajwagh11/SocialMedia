@@ -11,15 +11,15 @@ const NotFound = () => {
         
         {/* Glowing 404 / Icon Badge */}
         <div className="relative inline-flex items-center justify-center">
-          <div className="absolute inset-0 bg-indigo-500/20 dark:bg-indigo-400/10 blur-xl rounded-full animate-pulse" />
-          <div className="relative flex items-center justify-center w-20 h-20 bg-indigo-50 dark:bg-slate-800/80 border border-indigo-100 dark:border-slate-700/80 rounded-3xl shadow-sm text-indigo-600 dark:text-indigo-400">
+          <div className="absolute inset-0 bg-teal-500/20 dark:bg-teal-400/10 blur-xl rounded-full animate-pulse" />
+          <div className="relative flex items-center justify-center w-20 h-20 bg-teal-50 dark:bg-slate-800/80 border border-teal-100 dark:border-slate-700/80 rounded-3xl shadow-sm text-teal-600 dark:text-teal-400">
             <HiOutlineExclamationTriangle className="text-4xl" />
           </div>
         </div>
 
         {/* Text Content */}
         <div className="space-y-2">
-          <p className="text-xs font-semibold tracking-wider text-indigo-600 dark:text-indigo-400 uppercase">
+          <p className="text-xs font-semibold tracking-wider text-teal-600 dark:text-teal-400 uppercase">
             404 Error
           </p>
           <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">
@@ -35,7 +35,7 @@ const NotFound = () => {
           <button
             type="button"
             onClick={() => navigate("/")}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md hover:shadow-indigo-500/20 transition-all duration-200 active:scale-95 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:ring-offset-2 dark:focus:ring-offset-slate-900"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-teal-600 hover:bg-teal-500 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md hover:shadow-teal-500/20 transition-all duration-200 active:scale-95 cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:ring-offset-2 dark:focus:ring-offset-slate-900"
           >
             <HiOutlineHome className="text-lg" />
             <span>Return to Homepage</span>

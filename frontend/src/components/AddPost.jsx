@@ -59,11 +59,11 @@ const AddPost = ({ type }) => {
       <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-slate-700/50">
         <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-2">
           {type === "post" ? (
-            <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           ) : (
-            <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
           )}
@@ -79,7 +79,7 @@ const AddPost = ({ type }) => {
         <div>
           <input
             type="text"
-            className="w-full bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700/60 rounded-xl px-4 py-2.5 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all duration-200"
+            className="w-full bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700/60 rounded-xl px-4 py-2.5 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-500 transition-all duration-200"
             placeholder={`What's on your mind? Add a caption...`}
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
@@ -88,8 +88,8 @@ const AddPost = ({ type }) => {
 
         {/* File Upload / Drop Zone */}
         {!filePrev ? (
-          <label className="w-full flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500/70 bg-slate-50/50 dark:bg-slate-900/30 rounded-xl p-6 cursor-pointer transition-all duration-200 group">
-            <div className="p-3 rounded-full bg-indigo-50 dark:bg-indigo-950/50 text-indigo-500 dark:text-indigo-400 group-hover:scale-105 transition-transform duration-200">
+          <label className="w-full flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-teal-400 dark:hover:border-teal-500/70 bg-slate-50/50 dark:bg-slate-900/30 rounded-xl p-6 cursor-pointer transition-all duration-200 group">
+            <div className="p-3 rounded-full bg-teal-50 dark:bg-teal-950/50 text-teal-500 dark:text-teal-400 group-hover:scale-105 transition-transform duration-200">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
@@ -142,7 +142,7 @@ const AddPost = ({ type }) => {
               <span className="truncate max-w-[200px] sm:max-w-[300px] font-medium text-slate-700 dark:text-slate-300">
                 {file?.name || "Selected Media"}
               </span>
-              <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
+              <span className="text-[11px] text-teal-600 dark:text-teal-400 font-semibold">
                 Ready to upload ✓
               </span>
             </div>
@@ -153,7 +153,7 @@ const AddPost = ({ type }) => {
         <button
           type="submit"
           disabled={addLoading || !file}
-          className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white text-sm px-6 py-2.5 rounded-xl shadow-sm hover:shadow-indigo-500/20 transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-h-[42px]"
+          className="w-full bg-teal-600 hover:bg-teal-500 text-white text-sm px-6 py-2.5 rounded-xl shadow-sm transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-h-[42px]"
         >
           {addLoading ? (
             <LoadingAnimation />

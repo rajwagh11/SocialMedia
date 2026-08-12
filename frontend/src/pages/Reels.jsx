@@ -22,16 +22,14 @@ const Reels = () => {
       {loading ? (
         <Loading />
       ) : (
-        <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-[#0f172a] to-[#0b1220] pb-20">
+        <div className="min-h-screen w-full bg-slate-50 dark:bg-slate-900 pb-20">
           <div className="max-w-4xl mx-auto px-4 md:px-6 lg:px-8 py-6">
-            <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-sky-300 text-3xl font-bold mb-6">
+            <h1 className="text-slate-800 dark:text-slate-100 text-2xl font-bold mb-6">
               Reels
             </h1>
-            
-            <div className="rounded-2xl p-0.5 bg-gradient-to-r from-indigo-500/60 via-sky-400/60 to-cyan-400/60 mb-6">
-              <div className="rounded-2xl bg-white/10 backdrop-blur-md">
-                <AddPost type="reel" />
-              </div>
+
+            <div className="mb-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-1 shadow-sm">
+              <AddPost type="reel" />
             </div>
 
             {reels && reels.length > 0 ? (
@@ -47,7 +45,7 @@ const Reels = () => {
                 <div className="flex md:flex-col justify-center items-center gap-6">
                   {index !== 0 && (
                     <button
-                      className="bg-gradient-to-r from-indigo-500 to-sky-400 text-white py-4 px-4 rounded-full hover:shadow-lg hover:shadow-indigo-500/50 transition-all"
+                      className="bg-teal-600 hover:bg-teal-500 text-white py-4 px-4 rounded-full transition-colors"
                       onClick={prevReel}
                     >
                       <FaArrowUp className="text-xl" />
@@ -55,7 +53,7 @@ const Reels = () => {
                   )}
                   {index !== reels.length - 1 && (
                     <button
-                      className="bg-gradient-to-r from-indigo-500 to-sky-400 text-white py-4 px-4 rounded-full hover:shadow-lg hover:shadow-indigo-500/50 transition-all"
+                      className="bg-teal-600 hover:bg-teal-500 text-white py-4 px-4 rounded-full transition-colors"
                       onClick={nextReel}
                     >
                       <FaArrowDownLong className="text-xl" />
@@ -65,7 +63,7 @@ const Reels = () => {
               </div>
             ) : (
               <div className="text-center py-20">
-                <p className="text-white/60 text-lg">No reels yet. Create your first reel!</p>
+                <p className="text-slate-500 dark:text-slate-400 text-lg">No reels yet. Create your first reel!</p>
               </div>
             )}
           </div>

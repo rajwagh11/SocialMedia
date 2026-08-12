@@ -81,7 +81,7 @@ const UserAccount = () => {
   if (!user) return <p>User not found</p>;
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-[#0f172a] to-[#0b1220]">
+    <div className="min-h-screen w-full bg-slate-50 dark:bg-slate-900">
       <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pt-6 pb-12">
       {show && (
         <Modal value={followersData} title={"Followers"} setShow={setShow} />
@@ -90,29 +90,27 @@ const UserAccount = () => {
         <Modal value={followingsData} title={"Followings"} setShow={setShow1} />
       )}
 
-      <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-        <div className="h-40 w-full bg-gradient-to-r from-blue-600/70 via-indigo-500/70 to-cyan-500/70" />
-        <div className="bg-white/5 backdrop-blur px-6 md:px-10 pb-6 pt-0">
-          <div className="flex flex-col md:flex-row md:items-end gap-6 -mt-16">
+      <div className="rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-700/80 shadow-sm bg-white dark:bg-slate-800/90">
+        <div className="h-32 w-full bg-teal-600 dark:bg-teal-800" />
+        <div className="px-6 md:px-10 pb-6 pt-0">
+          <div className="flex flex-col md:flex-row md:items-end gap-6 -mt-14">
             <div className="shrink-0">
-              <div className="relative inline-block p-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-400">
-                <img
-                  src={user.profilePic?.url || "/default-avatar.png"}
-                  alt="Profile"
-                  className="w-[140px] h-[140px] md:w-[160px] md:h-[160px] rounded-full border-4 border-slate-900 object-cover"
-                />
-              </div>
+              <img
+                src={user.profilePic?.url || "/default-avatar.png"}
+                alt="Profile"
+                className="w-[130px] h-[130px] md:w-[150px] md:h-[150px] rounded-full border-4 border-white dark:border-slate-800 object-cover shadow-sm"
+              />
             </div>
-            <div className="flex-1 text-white">
+            <div className="flex-1 text-slate-800 dark:text-slate-100">
               <h1 className="text-2xl md:text-3xl font-bold">{user.name}</h1>
-              <p className="text-white/80">{user.email}</p>
-              <p className="text-white/70 capitalize">{user.gender}</p>
+              <p className="text-slate-500 dark:text-slate-400">{user.email}</p>
+              <p className="text-slate-500 dark:text-slate-400 capitalize">{user.gender}</p>
 
               <div className="flex items-center gap-6 mt-4">
-                <button onClick={() => setShow(true)} className="text-white/90 hover:text-white">
+                <button onClick={() => setShow(true)} className="text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors">
                   <span className="font-semibold">{user.followers?.length || 0}</span> Followers
                 </button>
-                <button onClick={() => setShow1(true)} className="text-white/90 hover:text-white">
+                <button onClick={() => setShow1(true)} className="text-slate-600 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors">
                   <span className="font-semibold">{user.followings?.length || 0}</span> Following
                 </button>
               </div>
@@ -121,10 +119,10 @@ const UserAccount = () => {
               <div className="md:ml-auto">
                 <button
                   onClick={followHandler}
-                  className={`px-6 py-2 rounded-full text-white font-semibold shadow-md shadow-black/20 ${
+                  className={`px-6 py-2 rounded-full text-white font-semibold shadow-sm transition-colors ${
                     followed
-                      ? "bg-gradient-to-r from-red-500 to-red-600"
-                      : "bg-gradient-to-r from-indigo-500 to-sky-400"
+                      ? "bg-rose-500 hover:bg-rose-600"
+                      : "bg-teal-600 hover:bg-teal-500"
                   }`}
                 >
                   {followed ? "Unfollow" : "Follow"}
@@ -136,23 +134,23 @@ const UserAccount = () => {
       </div>
 
       <div className="mt-6 flex items-center justify-between">
-        <div className="flex items-center gap-3 bg-white/10 backdrop-blur p-1 rounded-full border border-white/10">
+        <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-full border border-slate-200/80 dark:border-slate-700/80">
           <button
             onClick={() => setType("post")}
-            className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-200 ${
               type === "post"
-                ? "bg-gradient-to-r from-blue-500 to-indigo-400 text-white shadow-md shadow-blue-200"
-                : "bg-white/70 text-gray-700 hover:bg-white"
+                ? "bg-teal-600 text-white shadow-sm"
+                : "text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700"
             }`}
           >
             Posts
           </button>
           <button
             onClick={() => setType("reel")}
-            className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-200 ${
               type === "reel"
-                ? "bg-gradient-to-r from-indigo-500 to-sky-400 text-white shadow-md shadow-sky-200"
-                : "bg-white/70 text-gray-700 hover:bg-white"
+                ? "bg-teal-600 text-white shadow-sm"
+                : "text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700"
             }`}
           >
             Reels
@@ -160,22 +158,22 @@ const UserAccount = () => {
         </div>
 
         {type === "post" && (
-          <div className="flex items-center gap-2 bg-white/10 backdrop-blur p-1 rounded-full border border-white/10">
+          <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-full border border-slate-200/80 dark:border-slate-700/80">
             <button
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+              className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-200 ${
                 viewMode === "grid"
-                  ? "bg-gradient-to-r from-blue-500 to-indigo-400 text-white shadow-md shadow-blue-200"
-                  : "bg-white/70 text-gray-700 hover:bg-white"
+                  ? "bg-teal-600 text-white shadow-sm"
+                  : "text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700"
               }`}
               onClick={() => setViewMode("grid")}
             >
               Grid
             </button>
             <button
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+              className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-200 ${
                 viewMode === "list"
-                  ? "bg-gradient-to-r from-indigo-500 to-sky-400 text-white shadow-md shadow-sky-200"
-                  : "bg-white/70 text-gray-700 hover:bg-white"
+                  ? "bg-teal-600 text-white shadow-sm"
+                  : "text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700"
               }`}
               onClick={() => setViewMode("list")}
             >
@@ -201,7 +199,7 @@ const UserAccount = () => {
             </div>
           )
         ) : (
-          <p className="text-white/80 mt-6">No post yet</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-6">No post yet</p>
         ))}
 
       {type === "reel" &&
@@ -209,7 +207,7 @@ const UserAccount = () => {
           <div className="flex justify-center items-center gap-4 mt-6">
             {index > 0 && (
               <button
-                className="bg-gradient-to-r from-indigo-500 to-sky-400 text-white py-5 px-5 rounded-full"
+                className="bg-teal-600 hover:bg-teal-500 text-white py-5 px-5 rounded-full transition-colors"
                 onClick={prevReel}
               >
                 <FaArrowUp />
@@ -223,7 +221,7 @@ const UserAccount = () => {
             />
             {index < myReels.length - 1 && (
               <button
-                className="bg-gradient-to-r from-indigo-500 to-sky-400 text-white py-5 px-5 rounded-full"
+                className="bg-teal-600 hover:bg-teal-500 text-white py-5 px-5 rounded-full transition-colors"
                 onClick={nextReel}
               >
                 <FaArrowDownLong />
@@ -231,7 +229,7 @@ const UserAccount = () => {
             )}
           </div>
         ) : (
-          <p className="text-white/80 mt-6">No Reel yet</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-6">No Reel yet</p>
         ))}
       </div>
     </div>

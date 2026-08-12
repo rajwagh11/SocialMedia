@@ -23,7 +23,7 @@
     min-width: 320px;
     min-height: 100vh;
     /* Soft, eye-soothing slate background instead of harsh pure black/white */
-    @apply bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased selection:bg-indigo-500/20 selection:text-indigo-500;
+    @apply bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 antialiased selection:bg-teal-500/20 selection:text-teal-500;
   }
 }
 

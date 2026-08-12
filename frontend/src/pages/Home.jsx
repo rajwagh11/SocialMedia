@@ -10,7 +10,7 @@ const Home = () => {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-colors duration-300">
       {/* Add Post Container */}
-      <div className="mb-8 rounded-2xl bg-white/80 dark:bg-slate-800/60 backdrop-blur-md border border-slate-200/80 dark:border-slate-700/60 p-1 shadow-sm hover:shadow-md transition-all duration-300">
+      <div className="mb-8 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-1 shadow-sm hover:shadow-md transition-all duration-300">
         <AddPost type="post" />
       </div>
 
@@ -31,7 +31,7 @@ const Home = () => {
             onClick={() => setViewMode("grid")}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
               viewMode === "grid"
-                ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm font-semibold"
+                ? "bg-white dark:bg-slate-700 text-teal-600 dark:text-teal-400 shadow-sm font-semibold"
                 : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
             }`}
           >
@@ -45,7 +45,7 @@ const Home = () => {
             onClick={() => setViewMode("list")}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
               viewMode === "list"
-                ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm font-semibold"
+                ? "bg-white dark:bg-slate-700 text-teal-600 dark:text-teal-400 shadow-sm font-semibold"
                 : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
             }`}
           >

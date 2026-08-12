@@ -5,13 +5,13 @@
 @tailwind utilities;
 
 .custom-input {
-  @apply bg-gray-100 rounded-lg px-5 py-2 focus:border border-blue-600 
-         focus:outline-none text-black placeholder:text-gray-600 
+  @apply bg-slate-100 rounded-lg px-5 py-2 focus:border border-teal-600 
+         focus:outline-none text-black placeholder:text-slate-600 
          placeholder:opacity-50 font-semibold md:w-72 lg:w-[340px];
 }
 
 .auth-btn {
-  @apply px-24 md:px-[118px] lg:px-[140px] py-2 rounded-md text-white bg-gradient-to-l from-blue-400 to-yellow-400 font-medium m-2 mb-6 hover:from-blue-500 hover:to-yellow-500;
+  @apply px-24 md:px-[118px] lg:px-[140px] py-2 rounded-md text-white bg-teal-600 font-medium m-2 mb-6 hover:bg-teal-700;
 }
 
 .glass-panel {
@@ -19,5 +19,5 @@
 }
 
 .brand-gradient-text {
-  @apply text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-400;
+  @apply text-teal-600 dark:text-teal-400;
 }

@@ -46,7 +46,7 @@ const UsersSideBar = () => {
         <button
           onClick={fetchAllUsers}
           disabled={loading}
-          className="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white shadow-sm transition-all duration-200 disabled:opacity-60 whitespace-nowrap cursor-pointer"
+          className="flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl bg-teal-600 hover:bg-teal-500 active:scale-95 text-white shadow-sm transition-all duration-200 disabled:opacity-60 whitespace-nowrap cursor-pointer"
           type="button"
         >
           {loading ? (
@@ -85,11 +85,11 @@ const UsersSideBar = () => {
         {/* Drawer Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50">
           <div className="flex items-center gap-2">
-            <HiUsers className="text-indigo-600 dark:text-indigo-400 text-lg" />
+            <HiUsers className="text-teal-600 dark:text-teal-400 text-lg" />
             <h2 className="text-slate-800 dark:text-slate-100 font-semibold text-sm">
               All Members
             </h2>
-            <span className="text-[11px] font-medium bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-full border border-indigo-100 dark:border-indigo-900/50">
+            <span className="text-[11px] font-medium bg-teal-50 dark:bg-teal-950/50 text-teal-600 dark:text-teal-400 px-2 py-0.5 rounded-full border border-teal-100 dark:border-teal-900/50">
               {users.length}
             </span>
           </div>
@@ -113,7 +113,7 @@ const UsersSideBar = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search members..."
-              className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-100 dark:bg-slate-800/60 text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-slate-700/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 placeholder-slate-400 transition-all"
+              className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-100 dark:bg-slate-800/60 text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-slate-700/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/30 placeholder-slate-400 transition-all"
             />
           </div>
         </div>
@@ -131,13 +131,13 @@ const UsersSideBar = () => {
                 <img
                   src={user.profilePic?.url || "/default-avatar.png"}
                   alt={user.name || "User avatar"}
-                  className="w-9 h-9 rounded-full object-cover ring-1 ring-slate-200 dark:ring-slate-700/80 group-hover:ring-indigo-500/50 transition-all"
+                  className="w-9 h-9 rounded-full object-cover ring-1 ring-slate-200 dark:ring-slate-700/80 group-hover:ring-teal-500/50 transition-all"
                   onError={(e) => {
                     e.target.src = "/default-avatar.png";
                   }}
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
+                  <p className="text-xs font-medium text-slate-800 dark:text-slate-200 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors truncate">
                     {user.name || "Unnamed User"}
                   </p>
                   {user.email && (
