@@ -40,9 +40,29 @@ const postSchema = new mongoose.Schema({
        comment:{
         type:"String",
         required: true,
-       }
+       },
+       moderation: {
+        status: {
+          type: String,
+          enum: ["approved", "flagged", "removed"],
+          default: "approved",
+        },
+        reasons: [String],
+       },
+       createdAt: {
+        type: Date,
+        default: Date.now,
+       },
     },
   ],
+  moderation: {
+    status: {
+      type: String,
+      enum: ["approved", "flagged", "removed"],
+      default: "approved",
+    },
+    reasons: [String],
+  },
 })
 
 

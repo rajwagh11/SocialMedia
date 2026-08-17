@@ -51,6 +51,18 @@ const userSchema = new mongoose.Schema(
       enum: ["light", "dark"],
       default: "dark",
     },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+    isBanned: {
+      type: Boolean,
+      default: false,
+    },
+    warningsCount: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
