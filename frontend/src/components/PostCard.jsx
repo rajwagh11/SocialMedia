@@ -22,7 +22,6 @@ const PostCard = ({ type, value, layout = "grid" }) => {
   const [showModal, setShowModal] = useState(false);
   const [caption, setCaption] = useState(value?.caption || "");
   const [captionLoading, setCaptionLoading] = useState(false);
-  const [showAllComments, setShowAllComments] = useState(false);
 
   const { user } = UserData();
   const { likePost, addComment, deletePost, fetchPosts } = PostData();
@@ -233,6 +232,18 @@ const PostCard = ({ type, value, layout = "grid" }) => {
             </button>
           </div>
 
+          {/* Collapsed comment teaser (hidden once expanded) — matches the Instagram pattern of
+              not showing any comment content until the user explicitly opens the thread. */}
+          {!show && value.comments && value.comments.length > 0 && (
+            <button
+              onClick={() => setShow(true)}
+              type="button"
+              className="w-full text-left px-4 sm:px-5 pb-3 -mt-1 text-xs text-slate-400 dark:text-slate-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
+            >
+              View {value.comments.length === 1 ? "1 comment" : `all ${value.comments.length} comments`}
+            </button>
+          )}
+
           {/* Comment Input Section */}
           {show && (
             <div className="px-4 sm:px-5 pt-3 pb-4 border-t border-slate-100 dark:border-slate-700/50 bg-slate-50/60 dark:bg-slate-900/30">
@@ -255,27 +266,14 @@ const PostCard = ({ type, value, layout = "grid" }) => {
             </div>
           )}
 
-          {/* Comments List Section */}
-          {(show || (value.comments && value.comments.length > 0)) && (
+          {/* Comments List Section — only rendered once the user has opened the thread */}
+          {show && (
             <div className="px-4 sm:px-5 py-3 border-t border-slate-100 dark:border-slate-700/50 bg-slate-50/30 dark:bg-slate-900/20">
               <div className="max-h-[220px] overflow-y-auto space-y-3 pr-1 custom-scrollbar">
                 {value.comments && value.comments.length > 0 ? (
-                  <>
-                    {(showAllComments ? value.comments : value.comments.slice(0, 2)).map((comment) => (
-                      <Comment key={comment._id} value={comment} user={user} owner={value.owner._id} id={value._id} />
-                    ))}
-
-                    {value.comments.length > 2 && (
-                      <button
-                        onClick={() => setShowAllComments(!showAllComments)}
-                        className="w-full text-left mt-2 text-teal-600 dark:text-teal-400 hover:underline text-xs font-medium transition-colors py-1"
-                      >
-                        {showAllComments
-                          ? "Show less comments"
-                          : `View all ${value.comments.length} comments`}
-                      </button>
-                    )}
-                  </>
+                  value.comments.map((comment) => (
+                    <Comment key={comment._id} value={comment} user={user} owner={value.owner._id} id={value._id} />
+                  ))
                 ) : (
                   <p className="text-xs text-slate-400 dark:text-slate-500 text-center py-2">No comments yet. Start the conversation!</p>
                 )}

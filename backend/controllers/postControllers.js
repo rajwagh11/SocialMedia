@@ -3,7 +3,7 @@ import { Post } from"../models/postModel.js"
 import { User } from "../models/userModel.js"
 import getDataUrl from "../utils/urlGenrator.js"
 import cloudinary from "cloudinary"
-import { moderateMediaAndText } from "../utils/aiModeration.js";
+import { moderateMediaAndText, generateCaption } from "../utils/aiModeration.js";
 
 export const newPost = TryCatch(async (req, res) => {
   const { caption } = req.body;
@@ -78,6 +78,33 @@ export const newPost = TryCatch(async (req, res) => {
     message: "Post created",
     post,
   });
+});
+
+// AI caption suggestion — pure analysis, no Cloudinary upload and no Post document.
+// The user reviews/edits the suggestion before the actual /new upload happens.
+const MAX_CAPTION_MEDIA_BYTES = 15 * 1024 * 1024; // 15MB, inline API request limit headroom
+
+export const suggestCaption = TryCatch(async (req, res) => {
+  const file = req.file;
+  if (!file) return res.status(400).json({ message: "No file uploaded" });
+
+  console.log(`📸 Caption request received: ${(file.buffer.length / 1024).toFixed(0)}KB, ${file.mimetype}`);
+
+  if (file.mimetype === "application/pdf") {
+    return res.status(400).json({ message: "Captions can't be generated for documents" });
+  }
+
+  if (file.buffer.length > MAX_CAPTION_MEDIA_BYTES) {
+    return res.status(400).json({ message: "File is too large for caption generation — try a smaller one, or write your own." });
+  }
+
+  const { caption, error } = await generateCaption(file.buffer, file.mimetype);
+
+  if (!caption) {
+    return res.status(422).json({ message: error || "Couldn't generate a caption for this." });
+  }
+
+  res.json({ caption });
 });
 
 export const deletePost = TryCatch(async (req, res) => {

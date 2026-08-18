@@ -2,13 +2,15 @@ import React, { useState } from "react";
 import { PostData } from "../context/PostContext";
 import { LoadingAnimation } from "./Loading";
 import toast from "react-hot-toast";
+import { HiSparkles } from "react-icons/hi2";
+import { compressImageForCaption, extractVideoFrameForCaption } from "../utils/captionMedia";
 
 const AddPost = ({ type }) => {
   const [caption, setCaption] = useState("");
   const [file, setFile] = useState("");
   const [filePrev, setFilePrev] = useState("");
 
-  const { addPost, addLoading } = PostData();
+  const { addPost, addLoading, suggestCaption, captionLoading } = PostData();
 
   const changeFileHandler = (e) => {
     const selectedFile = e.target.files[0];
@@ -27,6 +29,26 @@ const AddPost = ({ type }) => {
     e.preventDefault();
     setFile("");
     setFilePrev("");
+  };
+
+  const generateCaptionHandler = async () => {
+    if (!file) return;
+    try {
+      const compressStart = performance.now();
+      const jpegBlob =
+        type === "post" ? await compressImageForCaption(file) : await extractVideoFrameForCaption(file);
+      console.log(
+        `🖼️ Client-side prep: ${(performance.now() - compressStart).toFixed(0)}ms, ${(jpegBlob.size / 1024).toFixed(0)}KB`
+      );
+
+      const requestStart = performance.now();
+      const suggestion = await suggestCaption(jpegBlob);
+      console.log(`🌐 Request (upload + server + Gemini): ${(performance.now() - requestStart).toFixed(0)}ms`);
+
+      if (suggestion) setCaption(suggestion);
+    } catch {
+      toast.error("Couldn't process this file for a caption. Try writing your own!");
+    }
   };
 
   const submitHandler = async (e) => {
@@ -84,6 +106,17 @@ const AddPost = ({ type }) => {
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
           />
+          {file && (
+            <button
+              type="button"
+              onClick={generateCaptionHandler}
+              disabled={captionLoading}
+              className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <HiSparkles className={captionLoading ? "animate-pulse" : ""} />
+              {captionLoading ? "Thinking of something..." : "Generate caption with AI"}
+            </button>
+          )}
         </div>
 
         {/* File Upload / Drop Zone */}

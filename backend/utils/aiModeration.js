@@ -72,6 +72,86 @@ Return JSON only, no markdown: {"allowed": true, "reasons": []} or {"allowed": f
   }
 }
 
+// --- AI CAPTION GENERATOR ---
+// Works for both images and short video frames, since Gemini accepts either as inlineData.
+// Uses its own model override (falls back to the moderation model) so you can point
+// captions at a lighter/faster model without affecting moderation accuracy.
+const CAPTION_MODEL = process.env.GEMINI_CAPTION_MODEL || GEMINI_MODEL;
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// 503 = model overloaded, 429 = rate limited — both are transient and worth retrying.
+// Everything else (bad key, malformed request, etc.) fails immediately since retrying won't help.
+function isRetryableStatus(status) {
+  return status === 503 || status === 429;
+}
+
+export async function generateCaption(mediaBuffer, mimeType) {
+  const apiKey = process.env.GOOGLE_API_KEY;
+  if (!apiKey) {
+    console.error("❌ GOOGLE_API_KEY is missing — caption generation unavailable.");
+    return { caption: null, error: "Caption generation is unavailable right now." };
+  }
+
+  const startedAt = Date.now();
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({ model: CAPTION_MODEL });
+
+  const prompt = `Look at this image and write one short, natural social media caption for it.
+Keep it under 18 words, casual and human — not robotic or generic. No hashtags, no quotation marks, at most one emoji if it genuinely fits.
+Return JSON only, no markdown: {"caption": "your caption here"}`;
+
+  const mediaPart = {
+    inlineData: {
+      data: mediaBuffer.toString("base64"),
+      mimeType: mimeType || "image/jpeg",
+    },
+  };
+
+  const MAX_ATTEMPTS = 3;
+
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      const result = await model.generateContent({
+        contents: [{ role: "user", parts: [{ text: prompt }, mediaPart] }],
+        generationConfig: { maxOutputTokens: 40, temperature: 0.9 },
+      });
+
+      console.log(`🕐 Gemini caption call (${CAPTION_MODEL}, attempt ${attempt}) took ${Date.now() - startedAt}ms`);
+
+      const rawText = result.response.text();
+      const parsed = safeParseJSON(rawText);
+
+      if (!parsed || typeof parsed.caption !== "string" || !parsed.caption.trim()) {
+        console.error("⚠️ Gemini caption response could not be parsed. Raw text:", rawText);
+        return { caption: null, error: "Couldn't come up with a caption for this one — try writing your own!" };
+      }
+
+      return { caption: parsed.caption.trim(), error: null };
+    } catch (err) {
+      const retryable = isRetryableStatus(err.status);
+      console.error(
+        `Caption generation error (attempt ${attempt}/${MAX_ATTEMPTS}, status ${err.status || "?"}) after ${Date.now() - startedAt}ms:`,
+        err.message
+      );
+
+      if (!retryable || attempt === MAX_ATTEMPTS) {
+        return {
+          caption: null,
+          error: retryable
+            ? "Gemini is under heavy load right now — please try again in a moment."
+            : "Caption generation failed. Please try again.",
+        };
+      }
+
+      // Exponential backoff: ~600ms, then ~1200ms
+      await sleep(600 * attempt);
+    }
+  }
+}
+
 // --- IMAGE DEEP CHECK (Tier 2) ---
 async function geminiDeepCheck(imageBuffer, caption, mimeType) {
   const apiKey = process.env.GOOGLE_API_KEY;

@@ -10,6 +10,7 @@ export const PostContextProvider = ({ children }) => {
   const [reels, setReels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [addLoading, setAddLoading] = useState(false);
+  const [captionLoading, setCaptionLoading] = useState(false);
 
   async function fetchPosts() {
     setLoading(true);
@@ -21,6 +22,21 @@ export const PostContextProvider = ({ children }) => {
       console.error("Fetch posts error:", error);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function suggestCaption(file) {
+    setCaptionLoading(true);
+    try {
+      const formdata = new FormData();
+      formdata.append("file", file, "caption-preview.jpg");
+      const { data } = await axiosInstance.post("/post/suggest-caption", formdata);
+      return data.caption;
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Couldn't generate a caption. Try writing your own!");
+      return null;
+    } finally {
+      setCaptionLoading(false);
     }
   }
 
@@ -137,7 +153,9 @@ export const PostContextProvider = ({ children }) => {
         deletePost,
         fetchPosts,
         Loading,
-        addLoading
+        addLoading,
+        suggestCaption,
+        captionLoading
       }}
     >
       {children}

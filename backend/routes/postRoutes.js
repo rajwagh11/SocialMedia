@@ -1,11 +1,13 @@
 import express from 'express'
 import { isAuth } from '../middlewares/isAuth.js'
-import { commentonPost, deleteComment, deletePost, editCaption, getAllPosts, likeUnlikePost, newPost } from '../controllers/postControllers.js'
+import { commentonPost, deleteComment, deletePost, editCaption, getAllPosts, likeUnlikePost, newPost, suggestCaption } from '../controllers/postControllers.js'
 import uploadFile from '../middlewares/multer.js'
 
 const router = express.Router()
 
 router.post("/new", isAuth, uploadFile, newPost)
+
+router.post("/suggest-caption", isAuth, uploadFile, suggestCaption)
 
 router.delete("/:id", isAuth, deletePost)
 
